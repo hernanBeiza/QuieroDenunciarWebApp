@@ -38,7 +38,7 @@ export default class PersonaService {
 
 	static async actualizar(persona:Persona):Promise<{result:boolean, mensajes:string, persona:Persona | null, error:string | undefined}> {
 		console.log("PersonaService: actualizar();");
-		const url = this.api + `persona/${persona.id}`;
+		const url = `${this.api}/persona/${persona.id}`;
 		const options = {
 			method: 'PUT',
 			headers: new Headers({

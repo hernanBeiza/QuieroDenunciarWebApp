@@ -43,12 +43,16 @@ export default function IngresarDireccion(props:IngresarDireccionPropsInterface)
       <Form.Group as={Row} className="mb-3 text-xs-start text-sm-start text-md-end" controlId="direccion">
         <Form.Label column xs={12} sm={4} md={2}>Calle</Form.Label>
         <Col xs={12} sm={8} md={4}>
-          <Form.Control required type="text" placeholder="" value={props.direccion?.calle} onChange={e => setDireccion({...direccion, calle:e.target.value})} />
+          <Form.Control required type="text" placeholder="" 
+          value={props.direccion?.calle} 
+          onChange={e => setDireccion({...direccion, calle:e.target.value})} />
           <Form.Control.Feedback type="invalid">La calle es obligatoria</Form.Control.Feedback>
         </Col>
         <Form.Label column xs={12} sm={4} md={1} className="text-sm-start text-md-end">Número</Form.Label>
         <Col xs={12} sm={4} md={2}>
-          <Form.Control required type="text" placeholder="" value={props.direccion?.numero} onChange={e => setDireccion({...direccion, numero:Number(e.target.value)})} />
+          <Form.Control required type="text" placeholder="" 
+          value={props.direccion?.numero} 
+          onChange={e => setDireccion({...direccion, numero:Number(e.target.value)})} />
         </Col>
         <Form.Label column xs={12} sm={2} md={1}>Depto</Form.Label>
         <Col xs={12} sm={2} md={2}>

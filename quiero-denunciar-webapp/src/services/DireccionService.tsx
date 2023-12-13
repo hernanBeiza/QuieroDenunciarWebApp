@@ -38,7 +38,7 @@ export default class DireccionService {
 
 	static async actualizar(direccion:Direccion):Promise<{result:boolean, mensajes:string, direccion:Direccion | null, error:string | undefined}>{
 		console.log("DireccionService: actualizar();");
-		const url = this.api + `direccion/${direccion.id}`;
+		const url = `${this.api}/direccion/${direccion.id}`;
 		const options = {
 			method: 'PUT',
 			headers: new Headers({

@@ -39,7 +39,6 @@ export default function IngresarDenunciado() {
     const direccionGuardada = LocalStorageService.obtenerDireccionDenunciada();
     const personaGuardada = LocalStorageService.obtenerPersonaDenunciada();
     const parteGuardada = LocalStorageService.obtenerParteDenunciada();
-    console.log(direccionGuardada, personaGuardada, parteGuardada);
     if(direccionGuardada){
       setDireccion(direccionGuardada);      
     }

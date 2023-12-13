@@ -25,7 +25,7 @@ export default class MateriaService {
 		}).then((data:{result:true,mensajes:string,materias:Array<Materia>}) => {
 			//console.log(data);
 			if(data.materias){
-				data.materias = data.materias.map((item:any)=> new Materia(item.codigoMateria, item.glosa, item.flagActivo));
+				data.materias = data.materias.map((item:any)=> new Materia(item.codigo, item.glosa, item.flagActivo));
 			}
 			return data;
 		}).catch(error => {

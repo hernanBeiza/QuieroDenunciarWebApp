@@ -1,14 +1,14 @@
-import { Parte } from './../models';
+import { DenunciaMateria } from './../models';
 import { ModelBuilder } from './../builders';
 
-export default class ParteService {
+export default class DenunciaMateriaService {
 	private static api:string = import.meta.env.VITE_API_URL;
 
 	constructor() { }
 
-	static async guardar(parte:Parte):Promise<{result:boolean, mensajes:string, error:string | undefined, parte:Parte | null}> {
-		console.log("ParteService: guardar();");
-		const url = `${this.api}/parte/`;
+	static async guardar(denunciaMateria:DenunciaMateria):Promise<{result:boolean, mensajes:string, denunciaMateria:DenunciaMateria | null, error:string | undefined}> {
+		console.log("DenunciaMateriaService: guardar();");
+		const url = `${this.api}/denuncia-materia/`;
 		const options = {
 			method: 'POST',
 			headers: new Headers({
@@ -16,7 +16,7 @@ export default class ParteService {
         'Content-Type': 'application/json',
         //'Authorization': 'Bearer ' + LocalStoreService.obtenerToken()
       }),
-	    body: JSON.stringify(parte)
+	    body: JSON.stringify(denunciaMateria)
 		}
 		return fetch(url,options)
 		.then(res => {
@@ -24,9 +24,10 @@ export default class ParteService {
 			//console.info(res.status);
 			//console.info(res.ok);
 			return res.json();
-		}).then((data:{result:true,mensajes:string,parte:Parte | null}) => {
-			if(data.parte){
-				data.parte = ModelBuilder.getParteBuilder(data.parte).build();
+		}).then((data:{result:true,mensajes:string,denunciaMateria:DenunciaMateria | null}) => {
+			console.log(data);
+			if(data.denunciaMateria){
+				data.denunciaMateria = ModelBuilder.getDenunciaMateriaBuilder(data.denunciaMateria).build();
 			}
 			return data;
 		}).catch(error => {
@@ -35,17 +36,16 @@ export default class ParteService {
 		});
 	}
 
-	static async actualizar(parte:Parte):Promise<{result:boolean, mensajes:string, error:string | undefined, parte:Parte | null}> {
-		console.log("ParteService: actualizar();");
-		const url = `${this.api}/parte/${parte.id}`;
+	static async eliminar(denunciaMateria:DenunciaMateria):Promise<{result:boolean, mensajes:string, error:string | undefined}> {
+		console.log("DenunciaMateriaService: eliminar();");
+		const url = `${this.api}/denuncia-materia/${denunciaMateria.id}`;
 		const options = {
-			method: 'PUT',
+			method: 'DELETE',
 			headers: new Headers({
         //'Content-Type': 'multipart/form-data'
         'Content-Type': 'application/json',
         //'Authorization': 'Bearer ' + LocalStoreService.obtenerToken()
-      }),
-	    body: JSON.stringify(parte)
+      })
 		}
 		return fetch(url,options)
 		.then(res => {
@@ -53,10 +53,8 @@ export default class ParteService {
 			//console.info(res.status);
 			//console.info(res.ok);
 			return res.json();
-		}).then((data:{result:true,mensajes:string,parte:Parte | null}) => {
-			if(data.parte){
-				data.parte = ModelBuilder.getParteBuilder(data.parte).build();
-			}
+		}).then((data:{result:true,mensajes:string}) => {
+			console.log(data);
 			return data;
 		}).catch(error => {
 			//console.error(error);
