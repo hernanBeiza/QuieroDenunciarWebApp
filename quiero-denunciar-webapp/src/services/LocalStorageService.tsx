@@ -1,4 +1,4 @@
-import { Direccion, Persona, Parte, Denuncia } from './../models';
+import { Direccion, Persona, Parte, Denuncia, Archivo } from './../models';
 import { ModelBuilder } from './../builders';
 
 export default class LocalStorageService {
@@ -7,6 +7,7 @@ export default class LocalStorageService {
 	private static QDPersonaDenuncianteKEY:string = "QDPersonaDenunciante";
 	private static QDParteDenuncianteKEY:string = "QDParteDenunciante";
 	private static QDDenunciaKEY:string = "QDDenunciaKEY";
+	private static QDArchivosKEY:string = "QDArchivosKEY";
 
 	private static QDDireccionDenunciadaKEY:string = "QDDireccionDenunciada";
 	private static QDPersonaDenunciadaKEY:string = "QDPersonaDenunciada";
@@ -47,6 +48,11 @@ export default class LocalStorageService {
 	static guardarDenuncia(denuncia:Denuncia):void {
 		console.log("LocalStorageService: guardarDenuncia();");
 		sessionStorage.setItem(LocalStorageService.QDDenunciaKEY, JSON.stringify(denuncia));
+	}
+
+	static guardarArchivos(archivos:Array<Archivo>):void {
+		console.log("LocalStorageService: guardarArchivos();");
+		sessionStorage.setItem(LocalStorageService.QDArchivosKEY, JSON.stringify(archivos));
 	}
 
 	static obtenerDireccionDenunciante():Direccion | null {
@@ -91,6 +97,13 @@ export default class LocalStorageService {
 		return denunciaString ? ModelBuilder.getDenunciaBuilder(JSON.parse(denunciaString)).build() : null;
 	}
 
+	static obtenerArchivos():Array<Archivo> | null {
+		console.log("LocalStorageService: obtenerArchivos();");
+		const archivosString = sessionStorage.getItem(LocalStorageService.QDArchivosKEY);
+		const archivos:Array<Archivo> = archivosString ? JSON.parse(archivosString) : null;		 
+		return archivos ? archivos.map(item=>ModelBuilder.getArchivoBuilder(item).build()) : null;
+	}
+
 	static eliminarDireccionDenunciante():void {
 		console.log("LocalStorageService: eliminarDireccionDenunciante();");
 		return sessionStorage.removeItem(LocalStorageService.QDDireccionDenuncianteKEY);
@@ -124,6 +137,11 @@ export default class LocalStorageService {
 	static eliminarDenuncia():void {
 		console.log("LocalStorageService: eliminarDenuncia();");
 		return sessionStorage.removeItem(LocalStorageService.QDDenunciaKEY);
+	}
+
+	static eliminarArchivos():void {
+		console.log("LocalStorageService: eliminarArchivos();");
+		return sessionStorage.removeItem(LocalStorageService.QDArchivosKEY);
 	}
 
 	static eliminarTodo():void {

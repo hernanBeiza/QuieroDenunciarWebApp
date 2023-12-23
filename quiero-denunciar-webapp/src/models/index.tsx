@@ -1,4 +1,3 @@
-import Antecedente from './Antecedente';
 import Archivo from './Archivo';
 import Comuna from './Comuna';
 import DenunciaMateria from './DenunciaMateria';
@@ -15,4 +14,4 @@ import TipoDireccion from './TipoDireccion';
 import TipoParte from './TipoParte';
 import TipoPersona from './TipoPersona';
 
-export { Antecedente, Archivo, Comuna, DenunciaMateria, Denuncia, Direccion, EstadoDenuncia, Materia, Parte, Persona, Provincia, Region, TipoArchivo, TipoDireccion, TipoParte, TipoPersona };
+export { Archivo, Comuna, DenunciaMateria, Denuncia, Direccion, EstadoDenuncia, Materia, Parte, Persona, Provincia, Region, TipoArchivo, TipoDireccion, TipoParte, TipoPersona };

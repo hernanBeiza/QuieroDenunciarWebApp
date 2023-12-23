@@ -1,3 +1,5 @@
+import AdjuntarArchivoService from './AdjuntarArchivoService';
+import ArchivoService from './ArchivoService';
 import ComunaService from './ComunaService';
 import DenunciaMateriaService from './DenunciaMateriaService';
 import DenunciaService from './DenunciaService';
@@ -11,4 +13,4 @@ import PersonaService from './PersonaService';
 import TipoDireccionService from './TipoDireccionService';
 import TipoPersonaService from './TipoPersonaService';
 
-export { ComunaService, DenunciaMateriaService, DenunciaService, DireccionService, MateriaService, IngresarDireccionPersonaParteService, IngresarDenunciaMateriaService, LocalStorageService, ParteService, PersonaService, TipoDireccionService, TipoPersonaService };
+export { AdjuntarArchivoService, ArchivoService, ComunaService, DenunciaMateriaService, DenunciaService, DireccionService, MateriaService, IngresarDireccionPersonaParteService, IngresarDenunciaMateriaService, LocalStorageService, ParteService, PersonaService, TipoDireccionService, TipoPersonaService };

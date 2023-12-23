@@ -208,9 +208,9 @@ export default function IngresarDenunciante() {
 
             <Form.Group>
             <Row>
-            <Col className="text-end">
-              <Button type="submit">Enviar</Button>
-            </Col>
+              <Col className="text-end">
+                <Button type="submit">Enviar</Button>
+              </Col>
             </Row>
             </Form.Group>
           </Form>

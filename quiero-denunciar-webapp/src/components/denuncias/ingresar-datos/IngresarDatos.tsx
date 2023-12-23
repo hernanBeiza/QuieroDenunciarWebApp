@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useReducer } from 'react';
-import dayjs from 'dayjs';
 
 import { Row, Col, Button, Form } from 'react-bootstrap';
 import './IngresarDatos.css'
@@ -9,7 +8,7 @@ import { LocalStorageService, DenunciaMateriaService, IngresarDenunciaMateriaSer
 import { Denuncia, Materia, DenunciaMateria } from './../../../models';
 import { IngresarDatosReducer, IngresarDatosStateInterface, IngresarDatosActionType } from './../../../reducers';
 
-import { Alerta, MateriaCheckBoxGroup } from './../../compartidos';
+import { Alerta, FechaSelector, MateriaCheckBoxGroup } from './../../compartidos';
 
 export default function IngresarDatos() {
   console.log("IngresarDatos");
@@ -55,9 +54,8 @@ export default function IngresarDatos() {
   const onDeseleccionarMateria = (materiaDeseleccionada:Materia) => {
     console.log("onDeseleccionarMateria", materiaDeseleccionada);
     const encontrada = denuncia.denunciasMaterias.find(item=>item.codigoMateria===materiaDeseleccionada.codigo);
-    if(encontrada.id){
+    if(encontrada && encontrada.id){
       DenunciaMateriaService.eliminar(encontrada).then(data=>{
-        console.log(data);
         if(data.result){
           const filtradas:Array<DenunciaMateria> = denuncia.denunciasMaterias.filter((item:DenunciaMateria)=>item.codigoMateria!=materiaDeseleccionada.codigo);
           setDenuncia({...denuncia,denunciasMaterias:filtradas});
@@ -73,7 +71,7 @@ export default function IngresarDatos() {
     if (denunciaGuardada){
       setDenuncia(denunciaGuardada);
     } else {
-      setDenuncia({...denuncia, idDenunciante:denunciante.id, idDenunciado:denunciado.id});
+      setDenuncia({...denuncia, idDenunciante:denunciante!.id, idDenunciado:denunciado!.id});
     }
   }
 
@@ -98,22 +96,15 @@ export default function IngresarDatos() {
     }
   };
 
-  const transformarFecha = (fecha:string) => {
-    const fechaFormateada = dayjs(fecha).format("YYYY-MM-DD");
-    return fechaFormateada;
-    //const partesDeFecha:Array<string> =  fecha.split("T")[0].split("-");
-    //return partesDeFecha[0].concat("-").concat(partesDeFecha[1]).concat("-").concat(partesDeFecha[2])
-  };
+  useEffect(()=>{
+    cargarDatosPrevios();
+  },[]);
 
   useEffect(() => {
     if(state.enviar){
       enviarDatos();
     }
   }, [state]);
-
-  useEffect(()=>{
-    cargarDatosPrevios();
-  },[]);
 
   return (
     <main>
@@ -139,15 +130,7 @@ export default function IngresarDatos() {
             </Col>
           </Form.Group>
           
-          <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="fecha">
-            <Form.Label className="text-sm-start text-md-end" column xs={12} sm={4} md={2}>Fecha de los hechos</Form.Label>
-            <Col className="text-start" xs={12} sm={8} md={10}>
-              <Form.Control required type="date" placeholder="" 
-              value = {denuncia.fecha ? transformarFecha(denuncia.fecha) : ""}
-              onChange={e => setDenuncia({...denuncia, fecha:e.target.value})} />
-              <Form.Control.Feedback type="invalid">La fecha de los hechos denunciados es obligatoria</Form.Control.Feedback>
-            </Col>
-          </Form.Group>
+          <FechaSelector fecha={denuncia.fecha ? denuncia.fecha : ""} onFechaChange={(event:string) => setDenuncia({...denuncia, fecha:event})} ></FechaSelector>
           
           <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="descripcion">
             <Form.Label column xs={12} sm={4} md={2}>Descripción</Form.Label>

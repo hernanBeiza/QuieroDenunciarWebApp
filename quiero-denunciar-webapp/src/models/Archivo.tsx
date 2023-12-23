@@ -1,7 +1,7 @@
 export default class Archivo {
 
 	public id:number;
-	public idAntecedente:number;
+	public idDenuncia:number;
 	public codigoTipoArchivo:number;
 	public rutaArchivo:string;
 	public nombreArchivo:string;
@@ -11,10 +11,12 @@ export default class Archivo {
 	public fechaModificacion:Date;
 	public flagActivo:boolean;
 	
-	constructor(id?:number, idAntecedente?:number, codigoTipoArchivo?:number, rutaArchivo?:string, nombreArchivo?:string, extensionArchivo?:string, fecha?:Date, fechaCreacion?:Date, fechaModificacion?:Date, flagActivo?:boolean);
-	constructor(id:number, idAntecedente:number, codigoTipoArchivo:number, rutaArchivo:string, nombreArchivo:string, extensionArchivo:string, fecha:Date, fechaCreacion:Date, fechaModificacion:Date, flagActivo:boolean) {
+	public file:File;
+
+	constructor(id?:number, idDenuncia?:number, codigoTipoArchivo?:number, rutaArchivo?:string, nombreArchivo?:string, extensionArchivo?:string, fecha?:Date, fechaCreacion?:Date, fechaModificacion?:Date, flagActivo?:boolean, file?:File);
+	constructor(id:number, idDenuncia:number, codigoTipoArchivo:number, rutaArchivo:string, nombreArchivo:string, extensionArchivo:string, fecha:Date, fechaCreacion:Date, fechaModificacion:Date, flagActivo:boolean, file:File) {
 		this.id = id;
-		this.idAntecedente = idAntecedente;
+		this.idDenuncia = idDenuncia;
 		this.codigoTipoArchivo = codigoTipoArchivo;
 		this.rutaArchivo = rutaArchivo;
 		this.nombreArchivo = nombreArchivo;
@@ -23,6 +25,7 @@ export default class Archivo {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaModificacion = fechaModificacion;
 		this.flagActivo = flagActivo;
+		this.file = file;
 	}
 
 }

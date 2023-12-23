@@ -6,7 +6,7 @@ import { Materia } from './../../../models';
 import { MateriaService } from './../../../services';
 
 interface MateriaCheckBoxGroupPropsInterface {
-  materias?:Array<Materia>;
+  materias?:Array<Materia> | null;
   onSeleccionarMateriaChange:Function;
   onDeseleccionarMateriaChange:Function;
 }

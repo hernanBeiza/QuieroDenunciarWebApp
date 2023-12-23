@@ -1,32 +1,113 @@
-import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useReducer } from 'react';
 
 import { Row, Col, Button, Form } from 'react-bootstrap';
 import  './AdjuntarDocumentos.css'
-import AdjuntarDocumentoItem from './adjuntar-documento-item';
-
-//TODO Crear archivo con interface o modelo, class
-interface Archivo {
-  id:number
-}
+import AdjuntarArchivoItem from './adjuntar-archivo-item';
+import { Archivo } from './../../../models';
+import { AdjuntarDocumentosReducer, AdjuntarDocumentosStateInterface, AdjuntarDocumentosActionType } from './../../../reducers';
+import { LocalStorageService, AdjuntarArchivoService } from './../../../services';
+import { Alerta } from './../../compartidos';
 
 export default function AdjuntarDocumentos() {
   console.log("AdjuntarDocumentos");
-  
-  const [archivos, setArchivos] = useState<Array<Archivo>>([]);
-  console.log(archivos);
+  const navigate = useNavigate();
 
-  function agregarArchivo() {
-    console.log("agregarArchivo");
-    //TODO Crear clase y objeto
-    const archivo:Archivo = { id:archivos.length+1 };
-    archivos.push(archivo);
+  const [archivos, setArchivos] = useState<Array<Archivo>>([]);
+
+  const initialState:AdjuntarDocumentosStateInterface = {
+    archivos: archivos,
+    enviar:false,
+    mostrarAlerta:false,
+    invalido:false,
+    errores:""
+  }
+
+  const [state, dispatch] = useReducer<(state: AdjuntarDocumentosStateInterface, action: AdjuntarDocumentosActionType) => AdjuntarDocumentosStateInterface>(AdjuntarDocumentosReducer, initialState);
+
+  function agregarNuevoArchivo() {
+    console.log("agregarNuevoArchivo");
+    const denuncia = LocalStorageService.obtenerDenuncia();
+    if(denuncia){
+      const nuevoArchivo:Array<Archivo> = [...archivos];
+      nuevoArchivo.push(new Archivo(0,denuncia.id))
+      setArchivos(nuevoArchivo);
+    }
+  }
+
+  const cargarDatosDenuncia = () =>{
+    const denuncia = LocalStorageService.obtenerDenuncia();
+    const archivosPrevios = LocalStorageService.obtenerArchivos();
+    if(denuncia){
+      const archivosAdjuntadosPreviamente:Array<Archivo> = [...archivos];
+      archivosAdjuntadosPreviamente.push(new Archivo(0,denuncia.id))
+      setArchivos(archivosAdjuntadosPreviamente);
+    }
+    if(archivosPrevios){
+      setArchivos(archivosPrevios);
+    }
+  }
+
+  const enviarFormulario = (event:any) => {
+    console.log("enviarFormulario");
+    event.preventDefault();
+    console.log(archivos);
+    //
+    state.archivos = archivos;
+    dispatch( { type: 'ENVIAR' } );
+  }
+
+  const onCerrarAlerta = () => {
+    dispatch( { type: 'CERRAR_ALERTA' } );
+  }
+
+  const actualizarArchivo = (indice:number, archivo:Archivo) => {
+    console.log(indice, archivo);
+    archivos[indice] = archivo as Archivo;
     setArchivos([...archivos]);
   }
 
+  const eliminarArchivo = (indice:number, archivo:Archivo) => {
+    console.log(indice, archivo);
+    archivos.splice(indice, 1);
+    setArchivos([...archivos]);
+  }
+
+  const enviarDatos = () => {
+    if(state.enviar){
+      enviarArchivos();
+    }
+  };
+
+  const enviarArchivos = async () => {
+    AdjuntarArchivoService.enviarVarios(archivos).then((data:Array<{result:boolean, mensaje:string, archivo:Archivo|undefined, errores:string|undefined}>)=>{
+      console.log(data);
+      const todosLosArchivosGuardados = data.every(item=>item.result);
+      if(todosLosArchivosGuardados){
+        const archivos:Array<Archivo> = data.map(itemData=>itemData.archivo);
+        LocalStorageService.guardarArchivos(archivos);
+        navigate("/denuncias/revisar");
+      } else {
+        const errores = data.filter(item=>!item.result).map(item=>item.errores.concat("\n"));
+        console.error("Hubo un error no controlado al guardar");
+        console.error(errores);
+        //TODO Mostrar alerta
+      }
+    }, error=>{
+      console.error(error);
+      //TODO Mostrar alerta
+    });
+  }
+
   useEffect(()=>{
-    console.log("useEffect");
-    console.log(archivos);
-  },[archivos])
+    cargarDatosDenuncia();
+  },[])
+
+  useEffect(() => {
+    if(state.enviar){
+      enviarDatos();
+    }
+  }, [state]);
 
   return (
     <main>
@@ -40,46 +121,35 @@ export default function AdjuntarDocumentos() {
 
       <Row>
         <Col>
-          <Form>
+          <Form noValidate validated={state.invalido} onSubmit={ enviarFormulario }>
+          <Alerta mostrar={state.mostrarAlerta} mensaje={state.errores} tipo={state.errores ? 'danger' : '' } onCerrarEvent={onCerrarAlerta}/>
+
             <Form.Group controlId="formFile" className="mb-3">
               <Row>
                 <Col className="text-end">
-                  <Button type="button" onClick={agregarArchivo}>Agregar nuevo archivo</Button>
+                  <Button type="button" onClick={agregarNuevoArchivo}>Adjuntar nuevo archivo</Button>
                 </Col>
               </Row>
             </Form.Group>
-
-            {archivos && archivos.map((archivo,indice)=> <AdjuntarDocumentoItem archivo={archivo } key={indice} id={indice+=1}/>)}
-
-            <Form.Group controlId="formFile" className="mb-3">
-              <Form.Label>Total de archivos a enviar: {archivos.length }</Form.Label>
+            {archivos && archivos.map((archivo:Archivo,index)=> <AdjuntarArchivoItem archivo={archivo} key={index} indice={index}
+              onActualizarArchivo = {actualizarArchivo}
+              onEliminarArchivo = {eliminarArchivo}/>)}
+            <p className="text-start">Total de archivos a enviar: {archivos.length }</p>
+            <Form.Group>
+              <Row>
+                <Col className="text-start">
+                  <Button type="button" href="/denuncias/ingresar-datos">Volver</Button>
+                </Col>
+                <Col className="text-end">
+                  <Button type="submit">Enviar</Button>
+                </Col>
+              </Row>
             </Form.Group>
-
-          <Form.Group>
-            <Row>
-              <Col className="text-start">
-                <Button href="/denuncias/ingresar-datos">Volver</Button>
-              </Col>
-              <Col className="text-end">
-                <Button type="button" href="/denuncias/revisar">Enviar</Button>
-              </Col>
-            </Row>
-          </Form.Group>
 
           </Form>
         </Col>
       </Row>
 
-      {/**
-      <Row>
-        <Col className="text-start">
-          <Button href="/denuncias/denuncia-ingresar-datos">Volver</Button>
-        </Col>
-        <Col className="text-end">
-          <Button href="/denuncias/denuncia-revisar">Siguiente</Button>
-        </Col>
-      </Row>
-      **/}
     </main>
   )
 }
