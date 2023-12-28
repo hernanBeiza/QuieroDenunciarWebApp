@@ -7,6 +7,7 @@ import { TipoDireccionService } from './../../../services';
 
 interface TipoDireccionPropsInterface {
   codigoTipoDireccion?:number,
+  desactivado?:boolean, 
   onTipoDireccionChange:Function
 }
 
@@ -14,7 +15,6 @@ export default function TipoDireccionSelect(props:TipoDireccionPropsInterface) {
   //console.log("TipoDireccionSelect", props);
   const [tipoDirecciones, setTipoDirecciones] = useState(new Array<TipoDireccion>());
 
-  //TODO Corregir carga doble
   useEffect(() => {
     obtenerTiposDeDirecciones();
   },[]);
@@ -31,6 +31,7 @@ export default function TipoDireccionSelect(props:TipoDireccionPropsInterface) {
   return (
     <>
       <Form.Select required aria-label="Tipo de dirección" 
+      disabled = {props.desactivado ? props.desactivado : false}
       value = {props.codigoTipoDireccion ? props.codigoTipoDireccion : ""}
       onChange = { (event:React.SyntheticEvent) => props.onTipoDireccionChange((event.target as HTMLInputElement).value)}>
         <option value="">Selecciona tipo de dirección</option>      

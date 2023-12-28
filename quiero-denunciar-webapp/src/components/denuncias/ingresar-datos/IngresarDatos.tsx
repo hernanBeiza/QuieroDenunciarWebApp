@@ -10,7 +10,7 @@ import { IngresarDatosReducer, IngresarDatosStateInterface, IngresarDatosActionT
 
 import { Alerta, FechaSelector, MateriaCheckBoxGroup } from './../../compartidos';
 
-export default function IngresarDatos() {
+export default function IngresarDatos(props:{desactivado?:boolean}) {
   console.log("IngresarDatos");
   const navigate = useNavigate();
 
@@ -106,6 +106,24 @@ export default function IngresarDatos() {
     }
   }, [state]);
 
+const mostrarEnModoRevision = () =>{
+  if(props.desactivado) {
+    return (<></>);
+  } else {
+    return (
+      <Form.Group>
+        <Row>
+          <Col className="text-start">
+            <Button type="button"  href="/denuncias/ingresar-denunciado">Volver</Button>
+          </Col>
+          <Col className="text-end">
+            <Button type="submit">Enviar</Button>
+          </Col>
+        </Row>
+      </Form.Group>
+    )
+  }
+}
   return (
     <main>
     <Row>
@@ -120,22 +138,22 @@ export default function IngresarDatos() {
         <Form noValidate validated={state.invalido} onSubmit={enviarFormulario}>
           <Alerta mostrar={state.mostrarAlerta} mensaje={state.errores} tipo={state.errores ? 'danger' : '' } onCerrarEvent={onCerrarAlerta}/>
 
-          <Form.Group as={Row} className="mb-3" controlId="materia">
-            <Form.Label className="text-sm-start text-md-end" column xs={12} sm={4} md={2}>Materia(s) relacionada(s)</Form.Label>
-            <Col className="text-start" xs={12} sm={8} md={10}>
-              <MateriaCheckBoxGroup 
-              materias={denuncia.denunciasMaterias ? denuncia.denunciasMaterias.map((item:DenunciaMateria)=>new Materia(item.codigoMateria)): null} 
-              onSeleccionarMateriaChange = { ((materiaSeleccionada:Materia) => onSeleccionarMateria(materiaSeleccionada)) }
-              onDeseleccionarMateriaChange = { ((materiaDeseleccionada:Materia) => onDeseleccionarMateria(materiaDeseleccionada)) } />
-            </Col>
-          </Form.Group>
+          <MateriaCheckBoxGroup 
+            desactivado={props.desactivado ? props.desactivado : false }
+            materias={denuncia.denunciasMaterias ? denuncia.denunciasMaterias.map((item:DenunciaMateria)=>new Materia(item.codigoMateria)): null} 
+            onSeleccionarMateriaChange = { ((materiaSeleccionada:Materia) => onSeleccionarMateria(materiaSeleccionada)) }
+            onDeseleccionarMateriaChange = { ((materiaDeseleccionada:Materia) => onDeseleccionarMateria(materiaDeseleccionada)) } />
           
-          <FechaSelector fecha={denuncia.fecha ? denuncia.fecha : ""} onFechaChange={(event:string) => setDenuncia({...denuncia, fecha:event})} ></FechaSelector>
+          <FechaSelector 
+            desactivado={props.desactivado ? props.desactivado : false }
+            fecha={denuncia.fecha ? denuncia.fecha : ""} 
+            onFechaChange={(event:string) => setDenuncia({...denuncia, fecha:event})} ></FechaSelector>
           
-          <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="descripcion">
+          <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="descripcion">
             <Form.Label column xs={12} sm={4} md={2}>Descripción</Form.Label>
             <Col xs={12} sm={8} md={10}>
               <Form.Control required as="textarea" rows={3} 
+              disabled = {props.desactivado ? props.desactivado : false}
               value = {denuncia.descripcion ? denuncia.descripcion : ""}
               onChange={e => setDenuncia({...denuncia, descripcion:e.target.value})} />
               <Form.Control.Feedback type="invalid">Los detalles de la denuncia son obligatorios</Form.Control.Feedback>
@@ -143,16 +161,7 @@ export default function IngresarDatos() {
             </Col>
           </Form.Group>
 
-          <Form.Group>
-            <Row>
-              <Col className="text-start">
-                <Button type="button"  href="/denuncias/ingresar-denunciado">Volver</Button>
-              </Col>
-              <Col className="text-end">
-                <Button type="submit">Enviar</Button>
-              </Col>
-            </Row>
-          </Form.Group>
+          {mostrarEnModoRevision()}
         </Form>
       </Col>
     </Row>

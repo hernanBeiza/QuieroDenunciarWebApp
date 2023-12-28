@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 interface FechaPropsInterface {
   label?:string,
   fecha?:string,
+  desactivado?:boolean,
   onFechaChange:Function
 }
 export default function FechaSelector(props:FechaPropsInterface) {
@@ -26,11 +27,12 @@ export default function FechaSelector(props:FechaPropsInterface) {
 
   return (
     <>
-      <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="fecha">
-        <Form.Label className="text-sm-start text-md-end" column xs={12} sm={4} md={2}>{props.label ? props.label : 'Fecha de los hechos'}</Form.Label>
+      <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="fecha">
+        <Form.Label column xs={12} sm={4} md={2}>{props.label ? props.label : 'Fecha de los hechos'}</Form.Label>
         <Col className="text-start" xs={12} sm={8} md={10}>
           <Form.Control required type="date" placeholder="" 
-          value = {props.fecha ? transformarFecha(props.fecha) : ""}
+          disabled = {props.desactivado ? props.desactivado : false}
+          value = {props.fecha ? transformarFecha(props.fecha) : fecha}
           onChange={seleccionar}/>
           <Form.Control.Feedback type="invalid">La fecha de los hechos denunciados es obligatoria</Form.Control.Feedback>
         </Col>

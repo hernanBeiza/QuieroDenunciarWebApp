@@ -11,7 +11,7 @@ import { IngresarDireccionPersonaParteService, LocalStorageService } from './../
 import { TipoPersonaEnum, TipoParteEnum } from './../../../enums';
 import { IngresarDenuncianteReducer, IngresarDenuncianteStateInterface, IngresarDenuncianteActionType } from './../../../reducers';
 
-export default function IngresarDenunciante() {
+export default function IngresarDenunciante(props:{desactivado?:boolean}) {
   console.log("IngresarDenunciante");
 
   const navigate = useNavigate();
@@ -94,6 +94,22 @@ export default function IngresarDenunciante() {
     dispatch( { type:'CERRAR_ALERTA' } );
   }
 
+  const mostrarEnModoRevision = () => {
+    if (props.desactivado){
+      return (<></>)
+    } else {
+      return (
+        <Form.Group>
+          <Row>
+            <Col className="text-end">
+              <Button type="submit">Enviar</Button>
+            </Col>
+          </Row>
+        </Form.Group>
+      )
+    }
+  }
+
  useEffect(() => {
     if(state.enviar){
       enviarDatos();
@@ -117,51 +133,54 @@ export default function IngresarDenunciante() {
         <Col>
           <Form noValidate validated={state.invalido} onSubmit={ enviarFormulario }>
             <Alerta mostrar={state.mostrarAlerta} mensaje={state.errores} tipo={state.errores ? 'danger' : '' } onCerrarEvent={onCerrarAlerta}/>
-            <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+            <Form.Group as={Row} className="mb-3" controlId="denunciaAnonima">
             <Form.Label column className={`text-sm-start text-md-end ${ denunciaAnonima ? "text-primary" : ""}`} xs={4} sm={4} md={2}>Denuncia anónima</Form.Label>
             <Col xs={8} sm={8} md={10}>
-            <Form.Switch id="anonimo" className="text-start mt-2" onChange={(event)=>setDenunciaAnonima(event.target.checked)}/>
+            <Form.Switch id="anonimo" className="text-start mt-2"
+              disabled={props.desactivado ? props.desactivado : false } 
+              onChange={(event)=>setDenunciaAnonima(event.target.checked)}/>
             </Col>
             </Form.Group>
 
-            <fieldset disabled={denunciaAnonima}>
-              <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="correo">
+            <fieldset disabled={denunciaAnonima || props.desactivado ? props.desactivado : false}>
+              <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="correo">
               <Form.Label column xs={12} sm={4} md={2}>Correo</Form.Label>
               <Col xs={12} sm={8} md={10}>
-              <Form.Control type="email" required placeholder="" 
-              value = {parte.correo} 
+              <Form.Control type="email" required placeholder=""
+              value = {parte.correo ? parte.correo : ''}
               onChange = { e => setParte({...parte, correo:e.target.value}) }/>
               <Form.Control.Feedback type="invalid">Correo es obligatorio</Form.Control.Feedback>
               </Col>
               </Form.Group>
 
-              <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="tipoPersona">
+              <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="tipoPersona">
               <Form.Label column xs={12} sm={4} md={2}>Tipo de persona</Form.Label>
               <Col xs={12} sm={8} md={10}>
                 <TipoPersonaSelect 
                 codigoTipoPersona = {persona.codigoTipoPersona} 
-                onTipoPersonaSelectChange = {((codigoTipoPersona:number) => setPersona({...persona, codigoTipoPersona:  Number(codigoTipoPersona) }))}/>
+                onTipoPersonaSelectChange = {((codigoTipoPersona:number) => setPersona({...persona, codigoTipoPersona: Number(codigoTipoPersona) }))}/>
               </Col>
               </Form.Group>
 
-              <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="rut">
+              <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="rut">
               <Form.Label column xs={4} sm={4} md={2}>Rut</Form.Label>
               <Col xs={4} sm={4} md={4}>
-              <Form.Control type="text" required placeholder="" maxLength = { 8 } 
+              <Form.Control type="text" required placeholder="" 
+              maxLength = { 8 } 
               value = {persona.rut ? persona.rut : ""} 
               onChange = { e => setPersona({...persona, rut:Number(e.target.value) })}/>
               <Form.Control.Feedback type="invalid">Rut es obligatorio</Form.Control.Feedback>
               </Col>
               <Form.Label column xs={2} sm={2} md={1}>DV</Form.Label>
               <Col xs={2} sm={2} md={1}>
-              <Form.Control type="text" required placeholder="" maxLength = { 1 } 
-              value = {persona.dv ? persona.dv : ""} 
+              <Form.Control type="text" required placeholder="" maxLength = { 1 }
+              value = {persona.dv ? persona.dv : ""}
               onChange = { e => setPersona({...persona, dv:e.target.value })}/>
               <Form.Control.Feedback type="invalid">DV es obligatorio</Form.Control.Feedback>
               </Col>
               </Form.Group>
 
-              <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="nombre">
+              <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="nombre">
               <Form.Label column xs={12} sm={4} md={2}>Nombre</Form.Label>
               <Col xs={12} sm={8} md={10}>
               <Form.Control type="text" required placeholder=""
@@ -171,7 +190,7 @@ export default function IngresarDenunciante() {
               </Col>
               </Form.Group>
 
-              <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="nombreSegundo">
+              <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="nombreSegundo">
               <Form.Label column xs={12} sm={4} md={2}>Segundo nombre</Form.Label>
               <Col xs={12} sm={8} md={10}>
               <Form.Control type="text" placeholder=""
@@ -181,7 +200,7 @@ export default function IngresarDenunciante() {
               </Col>
               </Form.Group>
 
-              <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="apellidoPaterno">
+              <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="apellidoPaterno">
               <Form.Label column sm={4} md={2}>Apellido paterno</Form.Label>
               <Col sm={8} md={10}>
               <Form.Control type="text" 
@@ -193,7 +212,7 @@ export default function IngresarDenunciante() {
               </Col>
               </Form.Group>
 
-              <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="apellidoMaterno">
+              <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="apellidoMaterno">
               <Form.Label column sm={4} md={2}>Apellido materno</Form.Label>
               <Col sm={8} md={10}>
               <Form.Control type="text" 
@@ -205,14 +224,7 @@ export default function IngresarDenunciante() {
               
               <IngresarDireccion direccion={direccion} onIngresarDireccionEvent={(direccion:Direccion)=>recibirDireccion(direccion)}/>
             </fieldset>
-
-            <Form.Group>
-            <Row>
-              <Col className="text-end">
-                <Button type="submit">Enviar</Button>
-              </Col>
-            </Row>
-            </Form.Group>
+            {mostrarEnModoRevision()}
           </Form>
         </Col>
       </Row>

@@ -101,47 +101,58 @@ export default class LocalStorageService {
 		console.log("LocalStorageService: obtenerArchivos();");
 		const archivosString = sessionStorage.getItem(LocalStorageService.QDArchivosKEY);
 		const archivos:Array<Archivo> = archivosString ? JSON.parse(archivosString) : null;		 
-		return archivos ? archivos.map(item=>ModelBuilder.getArchivoBuilder(item).build()) : null;
+		return archivos ? archivos.map(item=>ModelBuilder.getArchivoBuilder(item).build()!) : null;
 	}
 
 	static eliminarDireccionDenunciante():void {
 		console.log("LocalStorageService: eliminarDireccionDenunciante();");
-		return sessionStorage.removeItem(LocalStorageService.QDDireccionDenuncianteKEY);
+		sessionStorage.removeItem(LocalStorageService.QDDireccionDenuncianteKEY);
 	}
 
 	static eliminarDireccionDenunciada():void {
 		console.log("LocalStorageService: eliminarDireccionDenunciada();");
-		return sessionStorage.removeItem(LocalStorageService.QDDireccionDenunciadaKEY);
+		sessionStorage.removeItem(LocalStorageService.QDDireccionDenunciadaKEY);
 	}
 
 	static eliminarPersonaDenunciante():void {
 		console.log("LocalStorageService: eliminarPersonaDenunciante();");
-		return sessionStorage.removeItem(LocalStorageService.QDPersonaDenuncianteKEY);
+		sessionStorage.removeItem(LocalStorageService.QDPersonaDenuncianteKEY);
 	}
 
 	static eliminarPersonaDenunciada():void {
 		console.log("LocalStorageService: eliminarPersonaDenunciada();");
-		return sessionStorage.removeItem(LocalStorageService.QDPersonaDenunciadaKEY);
+		sessionStorage.removeItem(LocalStorageService.QDPersonaDenunciadaKEY);
 	}
 
 	static eliminarParteDenunciante():void {
 		console.log("LocalStorageService: eliminarParteDenunciante();");
-		return sessionStorage.removeItem(LocalStorageService.QDParteDenuncianteKEY);
+		sessionStorage.removeItem(LocalStorageService.QDParteDenuncianteKEY);
 	}
 
 	static eliminarParteDenunciada():void {
 		console.log("LocalStorageService: eliminarParteDenunciada();");
-		return sessionStorage.removeItem(LocalStorageService.QDParteDenunciadaKEY);
+		sessionStorage.removeItem(LocalStorageService.QDParteDenunciadaKEY);
 	}
 
 	static eliminarDenuncia():void {
 		console.log("LocalStorageService: eliminarDenuncia();");
-		return sessionStorage.removeItem(LocalStorageService.QDDenunciaKEY);
+		sessionStorage.removeItem(LocalStorageService.QDDenunciaKEY);
 	}
 
 	static eliminarArchivos():void {
 		console.log("LocalStorageService: eliminarArchivos();");
-		return sessionStorage.removeItem(LocalStorageService.QDArchivosKEY);
+		sessionStorage.removeItem(LocalStorageService.QDArchivosKEY);
+	}	
+
+	static eliminarArchivo(archivo:Archivo):void {
+		console.log("LocalStorageService: eliminarArchivo();");
+		const archivosGuardados = LocalStorageService.obtenerArchivos();
+		const archivosFiltrados = archivosGuardados ? archivosGuardados.filter(item=>item.id!=archivo.id) : null;
+		if(archivosFiltrados && archivosFiltrados.length>0){
+			LocalStorageService.guardarArchivos(archivosFiltrados);
+		} else {
+			LocalStorageService.eliminarArchivos();
+		}
 	}
 
 	static eliminarTodo():void {

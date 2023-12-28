@@ -13,7 +13,7 @@ export default function IngresarDatosReducer(state:IngresarDatosStateInterface, 
 				enviar = false;
 				errores = errores.concat("\nFecha de los hechos denunciados");
 			}
-			if(denuncia.denunciasMaterias.length===0){
+			if(denuncia.denunciasMaterias && denuncia.denunciasMaterias.length===0){
 				enviar = false;
 				errores = errores.concat("\nMateria(s) de la denuncia");
 			}

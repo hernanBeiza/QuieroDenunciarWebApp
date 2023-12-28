@@ -11,7 +11,7 @@ import { LocalStorageService, IngresarDireccionPersonaParteService } from './../
 
 import { IngresarDenunciadoReducer, IngresarDenunciadoStateInterface, IngresarDenunciadoActionType } from './../../../reducers';
 
-export default function IngresarDenunciado() {
+export default function IngresarDenunciado(props:{desactivado?:boolean}) {
   console.log("IngresarDenunciado");
   const navigate = useNavigate();
 
@@ -93,6 +93,25 @@ export default function IngresarDenunciado() {
     dispatch( { type: 'CERRAR_ALERTA' } );
   }
 
+  const mostrarEnModoRevision = () =>{
+    if(props.desactivado) {
+      return (<></>);
+    } else {
+      return (
+        <Form.Group>
+          <Row>
+            <Col className="text-start">
+              <Button type="button" href="/denuncias/ingresar-denunciante">Volver</Button>
+            </Col>
+            <Col className="text-end">
+              <Button type="submit">Enviar</Button>
+            </Col>
+          </Row>
+        </Form.Group>
+      )
+    }
+  }
+
   return (
     <main>
       <Row>
@@ -105,8 +124,9 @@ export default function IngresarDenunciado() {
         <Col>
           <Form noValidate validated={state.invalido} onSubmit={ enviarFormulario }>
             <Alerta mostrar={state.mostrarAlerta} mensaje={state.errores} tipo={state.errores ? 'danger' : '' } onCerrarEvent={onCerrarAlerta}/>
+            <fieldset disabled={props.desactivado ? props.desactivado : false}>
 
-            <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="tipoPersona">
+            <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="tipoPersona">
               <Form.Label column xs={12} sm={4} md={2}>Tipo de persona</Form.Label>
               <Col xs={12} sm={8} md={10}>
                 <TipoPersonaSelect 
@@ -115,59 +135,59 @@ export default function IngresarDenunciado() {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="rut">
+            <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="rut">
               <Form.Label column xs={4} sm={4} md={2}>Rut</Form.Label>
               <Col xs={4} sm={4} md={4}>
                 <Form.Control type="text" placeholder="" maxLength = { 8 } 
-                value = { persona.rut }
+                value = { persona.rut ? persona.rut : '' }
                 onChange = { e => setPersona({...persona, rut:Number(e.target.value) })} />
               </Col>
               <Form.Label column xs={2} sm={2} md={1}>DV</Form.Label>
               <Col xs={2} sm={2} md={1}>
                 <Form.Control type="text" placeholder="" maxLength = { 1 } 
-                value = { persona.dv }
+                value = { persona.dv ? persona.dv : '' }
                 onChange = { e => setPersona({...persona, dv:e.target.value })} />
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="nombre">
+            <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="nombre">
               <Form.Label column xs={12} sm={4} md={2}>Nombre</Form.Label>
               <Col xs={12} sm={8} md={10}>
                 <Form.Control required type="text" placeholder="" 
-                value = { persona.nombre }
+                value = { persona.nombre ? persona.nombre : '' }
                 onChange = { e => setPersona({...persona, nombre:e.target.value })} />
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="nombreSegundo">
+            <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="nombreSegundo">
               <Form.Label column sm={4} md={2}>Segundo nombre</Form.Label>
               <Col sm={8} md={10}>
                 <Form.Control 
                 type="text" placeholder="" 
-                value = { persona.nombreSegundo }
-                disabled={persona.codigoTipoPersona==TipoParteEnum.Denunciado} 
+                value = { persona.nombreSegundo ? persona.nombreSegundo : '' }
+                disabled = {persona.codigoTipoPersona==TipoParteEnum.Denunciado} 
                 onChange = { e => setPersona({...persona, nombreSegundo:e.target.value })} />
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="apellidoPaterno">
+            <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="apellidoPaterno">
               <Form.Label column sm={4} md={2}>Apellido paterno</Form.Label>
               <Col sm={8} md={10}>
                 <Form.Control 
                 type="text" placeholder="" 
-                value = { persona.apellidoPaterno }
+                value = { persona.apellidoPaterno ? persona.apellidoPaterno : '' }
                 disabled={persona.codigoTipoPersona==TipoParteEnum.Denunciado} 
                 onChange = { e => setPersona({...persona, apellidoPaterno:e.target.value })} 
                 />
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row} className="mb-3 text-sm-start text-md-end" controlId="apellidoMaterno">
+            <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="apellidoMaterno">
               <Form.Label column sm={4} md={2}>Apellido materno</Form.Label>
               <Col sm={8} md={10}>
                 <Form.Control 
                 type="text" placeholder="" 
-                value = { persona.apellidoMaterno }
+                value = { persona.apellidoMaterno ? persona.apellidoMaterno : '' }
                 disabled={persona.codigoTipoPersona==TipoParteEnum.Denunciado} 
                 onChange = { e => setPersona({...persona, apellidoMaterno:e.target.value })}
                 />                
@@ -178,16 +198,9 @@ export default function IngresarDenunciado() {
             direccion={direccion} 
             onIngresarDireccionEvent={(direccion:Direccion)=>recibirDireccion(direccion)}/>
 
-            <Form.Group>
-              <Row>
-                <Col className="text-start">
-                  <Button type="button" href="/denuncias/ingresar-denunciante">Volver</Button>
-                </Col>
-                <Col className="text-end">
-                  <Button type="submit">Enviar</Button>
-                </Col>
-              </Row>
-            </Form.Group>
+            </fieldset>
+
+            {mostrarEnModoRevision()}
           </Form>
         </Col>
       </Row>

@@ -5,9 +5,9 @@ export default class AdjuntarArchivoService {
 	
 	constructor() { }
 
-	static async enviarVarios(archivos:Array<Archivo>):Promise<Array<Archivo>>{
+	static async enviarVarios(archivos:Array<Archivo>):Promise<Array<{result:boolean, mensajes:string, errores:string | undefined, archivo:Archivo | null}>>{
 		console.log("AdjuntarArchivoService: enviarVarios();");
-		const datas:Array<Archivo> =  await Promise.all(
+		const datas:Array<{result:boolean, mensajes:string, errores:string | undefined, archivo:Archivo | null}> = await Promise.all(
 			archivos.map(async (itemArchivo:Archivo)=>{
 			const archivoData = itemArchivo.id ? await ArchivoService.actualizar(itemArchivo) : await ArchivoService.guardar(itemArchivo);
 			console.log(archivoData);

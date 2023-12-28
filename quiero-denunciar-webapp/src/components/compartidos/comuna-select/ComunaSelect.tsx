@@ -7,6 +7,7 @@ import { ComunaService } from './../../../services';
 
 interface ComunaPropsInterface {
   idComuna?:number,
+  desactivado?:boolean,   
   onComunaSelectChange:Function
 }
 export default function ComunaSelect(props:ComunaPropsInterface) {
@@ -30,6 +31,7 @@ export default function ComunaSelect(props:ComunaPropsInterface) {
   return (
     <>
     <Form.Select required aria-label="Seleccione comuna" 
+    disabled = {props.desactivado ? props.desactivado : false}    
     value = {props.idComuna ? props.idComuna : ""}
     onChange = {(event:React.SyntheticEvent) => props.onComunaSelectChange((event.target as HTMLInputElement).value)}>
       <option value="">Selecciona comuna</option>

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 
-import { Form } from 'react-bootstrap';
+import { Form, Row, Col } from 'react-bootstrap';
 
 import { Materia } from './../../../models';
 import { MateriaService } from './../../../services';
 
 interface MateriaCheckBoxGroupPropsInterface {
   materias?:Array<Materia> | null;
+  desactivado?:boolean;
   onSeleccionarMateriaChange:Function;
   onDeseleccionarMateriaChange:Function;
 }
@@ -78,15 +79,22 @@ export default function MateriaCheckBoxGroup(props:MateriaCheckBoxGroupPropsInte
 
   return (
     <>
-      {materias && materias.map((materia:Materia)=> <Form.Check required={ materiasSeleccionadas.length===0 }
-        type="checkbox"
-        id = { String(materia.codigo) }
-        value = { materia.codigo }
-        checked = { materiasSeleccionadas && materiasSeleccionadas.find(item=>item.codigo == materia.codigo ) !=undefined ? true : false }
-        key = { materia.codigo }
-        label = { materia.glosa }
-        onChange = { (event:any) => onCheckboxChange(materia.codigo, event.currentTarget.checked) } />)}
-      <Form.Control.Feedback type="invalid">La materia es obligatoria</Form.Control.Feedback>
+      <Form.Group as={Row} className="mb-3" controlId="materia">
+        <Form.Label className="text-sm-start text-md-end" column xs={12} sm={4} md={2}>Materia(s) relacionada(s)</Form.Label>
+        <Col className="text-start" xs={12} sm={8} md={10}>
+          {materias && materias.map((materia:Materia)=> <Form.Check 
+          required = { materiasSeleccionadas.length===0 }
+          disabled = { props.desactivado ? props.desactivado : false }
+          type="checkbox"
+          id = { String(materia.codigo) }
+          value = { materia.codigo }
+          checked = { materiasSeleccionadas && materiasSeleccionadas.find(item=>item.codigo == materia.codigo ) !=undefined ? true : false }
+          key = { materia.codigo }
+          label = { materia.glosa }
+          onChange = { (event:any) => onCheckboxChange(materia.codigo, event.currentTarget.checked) } />)}
+          <Form.Control.Feedback type="invalid">La materia es obligatoria</Form.Control.Feedback>
+        </Col>
+      </Form.Group>
     </>
   )
 }
