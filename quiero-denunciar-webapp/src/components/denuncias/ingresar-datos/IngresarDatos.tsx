@@ -61,6 +61,9 @@ export default function IngresarDatos(props:{desactivado?:boolean}) {
           setDenuncia({...denuncia,denunciasMaterias:filtradas});
         }
       },error=>console.error(error))      
+    } else {
+      const filtradas:Array<DenunciaMateria> = denuncia.denunciasMaterias.filter((item:DenunciaMateria)=>item.codigoMateria!=materiaDeseleccionada.codigo);
+      setDenuncia({...denuncia,denunciasMaterias:filtradas});
     }
   }
 
@@ -71,7 +74,7 @@ export default function IngresarDatos(props:{desactivado?:boolean}) {
     if (denunciaGuardada){
       setDenuncia(denunciaGuardada);
     } else {
-      setDenuncia({...denuncia, idDenunciante:denunciante!.id, idDenunciado:denunciado!.id});
+      setDenuncia({...denuncia, idDenunciante:denunciante ? denunciante.id : null, idDenunciado:denunciado!.id});
     }
   }
 

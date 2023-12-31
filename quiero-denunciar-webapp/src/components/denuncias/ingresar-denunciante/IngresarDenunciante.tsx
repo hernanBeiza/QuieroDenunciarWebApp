@@ -48,6 +48,9 @@ export default function IngresarDenunciante(props:{desactivado?:boolean}) {
     if(parteGuardada){
       setParte(parteGuardada);      
     }
+    if(!direccionGuardada && !personaGuardada && !parteGuardada) {
+      setDenunciaAnonima(true);
+    }
   }
 
   const recibirDireccion = (direccionRecibida:Direccion) => {
@@ -68,19 +71,23 @@ export default function IngresarDenunciante(props:{desactivado?:boolean}) {
   }
 
   const enviarDenuncia = async () => {
-    try {
-      let [direccionGuardada, personaGuardada, parteGuardada] = await IngresarDireccionPersonaParteService.guardar(direccion, persona, parte);
-      console.log(direccionGuardada, personaGuardada, parteGuardada);
-      if(direccionGuardada.id && personaGuardada.id && parteGuardada.id){
-        LocalStorageService.guardarDireccionDenunciante(direccionGuardada);
-        LocalStorageService.guardarPersonaDenunciante(personaGuardada);
-        LocalStorageService.guardarParteDenunciante(parteGuardada);
-        navigate("/denuncias/ingresar-denunciado");
-      } else {
-        console.error("Hubo un error no controlado al guardar");
-      }
-    } catch (e) {
-      console.error(e);
+    if(state.denunciaAnonima){
+      navigate("/denuncias/ingresar-denunciado");
+    } else {
+      try {
+        let [direccionGuardada, personaGuardada, parteGuardada] = await IngresarDireccionPersonaParteService.guardar(direccion, persona, parte);
+        console.log(direccionGuardada, personaGuardada, parteGuardada);
+        if(direccionGuardada.id && personaGuardada.id && parteGuardada.id){
+          LocalStorageService.guardarDireccionDenunciante(direccionGuardada);
+          LocalStorageService.guardarPersonaDenunciante(personaGuardada);
+          LocalStorageService.guardarParteDenunciante(parteGuardada);
+          navigate("/denuncias/ingresar-denunciado");
+        } else {
+          console.error("Hubo un error no controlado al guardar");
+        }
+      } catch (e) {
+        console.error(e);
+      }      
     }
   }
 
@@ -137,12 +144,13 @@ export default function IngresarDenunciante(props:{desactivado?:boolean}) {
             <Form.Label column className={`text-sm-start text-md-end ${ denunciaAnonima ? "text-primary" : ""}`} xs={4} sm={4} md={2}>Denuncia anónima</Form.Label>
             <Col xs={8} sm={8} md={10}>
             <Form.Switch id="anonimo" className="text-start mt-2"
+              checked={denunciaAnonima}
               disabled={props.desactivado ? props.desactivado : false } 
               onChange={(event)=>setDenunciaAnonima(event.target.checked)}/>
             </Col>
             </Form.Group>
 
-            <fieldset disabled={denunciaAnonima || props.desactivado ? props.desactivado : false}>
+            <fieldset disabled={denunciaAnonima || (props.desactivado ? props.desactivado : false)}>
               <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="correo">
               <Form.Label column xs={12} sm={4} md={2}>Correo</Form.Label>
               <Col xs={12} sm={8} md={10}>
