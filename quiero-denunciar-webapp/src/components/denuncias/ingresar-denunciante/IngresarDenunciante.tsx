@@ -5,7 +5,7 @@ import { Row, Col, Button, Form } from 'react-bootstrap';
 
 import './IngresarDenunciante.css'
 
-import { Alerta, TipoPersonaSelect, IngresarDireccion } from './../../compartidos';
+import { Alerta, IngresarDireccion, Rut, TipoPersonaSelect } from './../../compartidos';
 import { Persona, Parte, Direccion } from './../../../models';
 import { IngresarDireccionPersonaParteService, LocalStorageService } from './../../../services';
 import { TipoPersonaEnum, TipoParteEnum } from './../../../enums';
@@ -170,23 +170,11 @@ export default function IngresarDenunciante(props:{desactivado?:boolean}) {
               </Col>
               </Form.Group>
 
-              <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="rut">
-              <Form.Label column xs={4} sm={4} md={2}>Rut</Form.Label>
-              <Col xs={4} sm={4} md={4}>
-              <Form.Control type="text" required placeholder="" 
-              maxLength = { 8 } 
-              value = {persona.rut ? persona.rut : ""} 
-              onChange = { e => setPersona({...persona, rut:Number(e.target.value) })}/>
-              <Form.Control.Feedback type="invalid">Rut es obligatorio</Form.Control.Feedback>
-              </Col>
-              <Form.Label column xs={2} sm={2} md={1}>DV</Form.Label>
-              <Col xs={2} sm={2} md={1}>
-              <Form.Control type="text" required placeholder="" maxLength = { 1 }
-              value = {persona.dv ? persona.dv : ""}
-              onChange = { e => setPersona({...persona, dv:e.target.value })}/>
-              <Form.Control.Feedback type="invalid">DV es obligatorio</Form.Control.Feedback>
-              </Col>
-              </Form.Group>
+              <Rut 
+              rut = {persona ? persona.rut : 0 }
+              dv = {persona ? persona.dv : "0" }
+              desactivado = {denunciaAnonima } 
+              onRutChange = { (rut:Number, dv:string) => setPersona({...persona, rut:Number(rut), dv:dv})}/>
 
               <Form.Group as={Row} className="mb-3 text-start text-md-end" controlId="nombre">
               <Form.Label column xs={12} sm={4} md={2}>Nombre</Form.Label>

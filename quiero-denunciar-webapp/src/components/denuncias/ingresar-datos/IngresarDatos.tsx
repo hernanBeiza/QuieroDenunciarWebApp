@@ -74,7 +74,7 @@ export default function IngresarDatos(props:{desactivado?:boolean}) {
     if (denunciaGuardada){
       setDenuncia(denunciaGuardada);
     } else {
-      setDenuncia({...denuncia, idDenunciante:denunciante ? denunciante.id : null, idDenunciado:denunciado!.id});
+      setDenuncia({...denuncia, idDenunciante:denunciante ? denunciante.id : 0, idDenunciado:denunciado!.id});
     }
   }
 
