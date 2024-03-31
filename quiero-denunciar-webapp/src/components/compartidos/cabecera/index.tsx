@@ -1,2 +1,2 @@
-import Cabecera from './cabecera';
+import Cabecera from './Cabecera';
 export default Cabecera;

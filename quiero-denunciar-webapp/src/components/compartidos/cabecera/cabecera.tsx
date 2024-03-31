@@ -1,3 +1,5 @@
+import './cabecera.css';
+
 import { useLocation } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 
