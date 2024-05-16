@@ -4,9 +4,9 @@ import { Card, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
-import { FechaSelector } from './../../../compartidos/';
-import { Archivo } from './../../../../models';
-import { TipoArchivoEnum } from './../../../../enums';
+import { FechaSelector } from 'quiero-denunciar-shared-components';
+import { Archivo } from 'quiero-denunciar-models';
+import { TipoArchivoEnum } from 'quiero-denunciar-enums';
 
 export default function AdjuntarArchivoItem(props:{desactivado?:boolean, indice:number, archivo:Archivo, onActualizarArchivo:Function, onEliminarArchivo:Function}) {
   console.log("AdjuntarArchivoItem");

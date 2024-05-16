@@ -4,11 +4,12 @@ import { useState, useEffect, useReducer } from 'react';
 import { Row, Col, Button, Form } from 'react-bootstrap';
 import './IngresarDatos.css'
 
-import { LocalStorageService, DenunciaMateriaService, IngresarDenunciaMateriaService } from './../../../services';
-import { Denuncia, Materia, DenunciaMateria } from './../../../models';
+import { LocalStorageService, DenunciaMateriaService, IngresarDenunciaMateriaService } from 'quiero-denunciar-services';
+import { Denuncia, Materia, DenunciaMateria } from 'quiero-denunciar-models';
+import { Alerta, FechaSelector, MateriaCheckBoxGroup } from 'quiero-denunciar-shared-components';
+
 import { IngresarDatosReducer, IngresarDatosStateInterface, IngresarDatosActionType } from './../../../reducers';
 
-import { Alerta, FechaSelector, MateriaCheckBoxGroup } from './../../compartidos';
 
 export default function IngresarDatos(props:{desactivado?:boolean}) {
   console.log("IngresarDatos");

@@ -4,10 +4,12 @@ import { useEffect, useState, useReducer } from 'react';
 import { Row, Col, Button, Form } from 'react-bootstrap';
 import  './AdjuntarDocumentos.css'
 import AdjuntarArchivoItem from './adjuntar-archivo-item';
-import { Archivo } from './../../../models';
+
+import { Archivo } from 'quiero-denunciar-models';
+import { LocalStorageService, AdjuntarArchivoService, ArchivoService } from 'quiero-denunciar-services';
+import { Alerta } from 'quiero-denunciar-shared-components';
+
 import { AdjuntarDocumentosReducer, AdjuntarDocumentosStateInterface, AdjuntarDocumentosActionType } from './../../../reducers';
-import { LocalStorageService, AdjuntarArchivoService, ArchivoService } from './../../../services';
-import { Alerta } from './../../compartidos';
 
 export default function AdjuntarDocumentos(props:{desactivado?:boolean}) {
   console.log("AdjuntarDocumentos");

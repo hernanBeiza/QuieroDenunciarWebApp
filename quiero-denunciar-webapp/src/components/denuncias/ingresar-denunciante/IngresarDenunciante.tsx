@@ -5,10 +5,11 @@ import { Row, Col, Button, Form } from 'react-bootstrap';
 
 import './IngresarDenunciante.css'
 
-import { Alerta, IngresarDireccion, Rut, TipoPersonaSelect } from './../../compartidos';
-import { Persona, Parte, Direccion } from './../../../models';
-import { IngresarDireccionPersonaParteService, LocalStorageService } from './../../../services';
-import { TipoPersonaEnum, TipoParteEnum } from './../../../enums';
+import { Alerta, IngresarDireccion, Rut, TipoPersonaSelect } from 'quiero-denunciar-shared-components';
+import { Persona, Parte, Direccion } from 'quiero-denunciar-models';
+import { IngresarDireccionPersonaParteService, LocalStorageService } from 'quiero-denunciar-services';
+import { TipoPersonaEnum, TipoParteEnum } from 'quiero-denunciar-enums';
+
 import { IngresarDenuncianteReducer, IngresarDenuncianteStateInterface, IngresarDenuncianteActionType } from './../../../reducers';
 
 export default function IngresarDenunciante(props:{desactivado?:boolean}) {
@@ -166,7 +167,7 @@ export default function IngresarDenunciante(props:{desactivado?:boolean}) {
               <Col xs={12} sm={8} md={10}>
                 <TipoPersonaSelect 
                 codigoTipoPersona = {persona.codigoTipoPersona} 
-                onTipoPersonaSelectChange = {((codigoTipoPersona:number) => setPersona({...persona, codigoTipoPersona: Number(codigoTipoPersona) }))}/>
+                onTipoPersonaChange = {((codigoTipoPersona:number) => setPersona({...persona, codigoTipoPersona: Number(codigoTipoPersona) }))}/>
               </Col>
               </Form.Group>
 
@@ -218,7 +219,11 @@ export default function IngresarDenunciante(props:{desactivado?:boolean}) {
               </Col>
               </Form.Group>
               
-              <IngresarDireccion direccion={direccion} onIngresarDireccionEvent={(direccion:Direccion)=>recibirDireccion(direccion)}/>
+              <IngresarDireccion 
+              idProvincia={23} 
+              direccion={direccion} 
+              onIngresarDireccionEvent={(direccion:Direccion)=>recibirDireccion(direccion)}/>
+
             </fieldset>
             {mostrarEnModoRevision()}
           </Form>

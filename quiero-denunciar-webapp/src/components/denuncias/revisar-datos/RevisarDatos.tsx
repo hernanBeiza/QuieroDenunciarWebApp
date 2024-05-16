@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Row, Col, Button, Form, Accordion } from 'react-bootstrap';
 
-import { LocalStorageService } from './../../../services';
+import { LocalStorageService } from 'quiero-denunciar-services';
 import { IngresarDenunciante, IngresarDenunciado, IngresarDatos, AdjuntarDocumentos } from './../';
 
 import './RevisarDatos.css'

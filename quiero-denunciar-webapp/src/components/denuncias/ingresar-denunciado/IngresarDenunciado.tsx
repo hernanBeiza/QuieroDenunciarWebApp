@@ -4,10 +4,10 @@ import { useState, useEffect, useReducer } from 'react';
 import { Row, Col, Button, Form } from 'react-bootstrap';
 import './IngresarDenunciado.css'
 
-import { Alerta, IngresarDireccion, Rut, TipoPersonaSelect } from './../../compartidos';
-import { Persona, Parte, Direccion } from './../../../models';
-import { TipoParteEnum } from './../../../enums';
-import { LocalStorageService, IngresarDireccionPersonaParteService } from './../../../services';
+import { Alerta, IngresarDireccion, Rut, TipoPersonaSelect } from 'quiero-denunciar-shared-components';
+import { Persona, Parte, Direccion } from 'quiero-denunciar-models';
+import { TipoParteEnum } from 'quiero-denunciar-enums';
+import { LocalStorageService, IngresarDireccionPersonaParteService } from 'quiero-denunciar-services';
 
 import { IngresarDenunciadoReducer, IngresarDenunciadoStateInterface, IngresarDenunciadoActionType } from './../../../reducers';
 
@@ -131,7 +131,7 @@ export default function IngresarDenunciado(props:{desactivado?:boolean}) {
               <Col xs={12} sm={8} md={10}>
                 <TipoPersonaSelect 
                 codigoTipoPersona = {persona.codigoTipoPersona} 
-                onTipoPersonaSelectChange = { ((codigoTipoPersona:number) => setPersona({...persona, codigoTipoPersona:Number(codigoTipoPersona) }) ) }/>
+                onTipoPersonaChange = { ((codigoTipoPersona:number) => setPersona({...persona, codigoTipoPersona:Number(codigoTipoPersona) }) ) }/>
               </Col>
             </Form.Group>
 
@@ -186,6 +186,7 @@ export default function IngresarDenunciado(props:{desactivado?:boolean}) {
             </Form.Group>
 
             <IngresarDireccion 
+            idProvincia={23}
             direccion={direccion} 
             onIngresarDireccionEvent={(direccion:Direccion)=>recibirDireccion(direccion)}/>
 
